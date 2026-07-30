@@ -1,16 +1,215 @@
 <section class="products-page">
-  <header>
+  <header class="page-header">
     <div>
-      <h1>Productos</h1>
-      <p>Usuario: {{ authService.getUser()?.email }}</p>
+      <p class="eyebrow">Panel principal</p>
+      <h1>Gestión de productos</h1>
+      <p class="user-info">
+        Sesión activa: {{ authService.getUser()?.email }}
+      </p>
     </div>
 
-    <button type="button" (click)="logout()">
+    <button
+      type="button"
+      class="logout-button"
+      (click)="authService.logout()"
+    >
       Cerrar sesión
     </button>
   </header>
 
-  <main>
-    <h2>CRUD de productos</h2>
-  </main>
+  @if (errorMessage()) {
+    <div class="alert error-alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="alert success-alert">
+      {{ successMessage() }}
+    </div>
+  }
+
+  <div class="content-grid">
+    <section class="card form-card">
+      <div class="card-header">
+        <div>
+          <p class="eyebrow">{{ isEditing() ? 'Editar' : 'Nuevo' }}</p>
+          <h2>{{ isEditing() ? 'Actualizar producto' : 'Crear producto' }}</h2>
+        </div>
+
+        @if (isEditing()) {
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="resetForm()"
+          >
+            Cancelar
+          </button>
+        }
+      </div>
+
+      <form [formGroup]="productForm" (ngSubmit)="submit()">
+        <label for="name">Nombre</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="Ej. Laptop Lenovo"
+        />
+        @if (
+          productForm.controls.name.touched &&
+          productForm.controls.name.invalid
+        ) {
+          <small class="field-error">
+            El nombre es obligatorio y debe tener máximo 120 caracteres.
+          </small>
+        }
+
+        <label for="description">Descripción</label>
+        <textarea
+          id="description"
+          rows="4"
+          formControlName="description"
+          placeholder="Describe el producto"
+        ></textarea>
+        @if (
+          productForm.controls.description.touched &&
+          productForm.controls.description.invalid
+        ) {
+          <small class="field-error">
+            La descripción es obligatoria.
+          </small>
+        }
+
+        <div class="form-row">
+          <div>
+            <label for="price">Precio</label>
+            <input
+              id="price"
+              type="number"
+              min="0.01"
+              step="0.01"
+              formControlName="price"
+            />
+            @if (
+              productForm.controls.price.touched &&
+              productForm.controls.price.invalid
+            ) {
+              <small class="field-error">
+                El precio debe ser mayor a 0.
+              </small>
+            }
+          </div>
+
+          <div>
+            <label for="stock">Stock</label>
+            <input
+              id="stock"
+              type="number"
+              min="0"
+              step="1"
+              formControlName="stock"
+            />
+            @if (
+              productForm.controls.stock.touched &&
+              productForm.controls.stock.invalid
+            ) {
+              <small class="field-error">
+                El stock no puede ser negativo.
+              </small>
+            }
+          </div>
+        </div>
+
+        <label for="productType">Tipo de producto</label>
+        <select id="productType" formControlName="productType">
+          @for (type of productTypes; track type) {
+            <option [value]="type">
+              {{ productTypeLabel(type) }}
+            </option>
+          }
+        </select>
+
+        <button
+          type="submit"
+          class="primary-button"
+          [disabled]="saving()"
+        >
+          {{ saving() ? 'Guardando...' : (isEditing() ? 'Actualizar' : 'Crear producto') }}
+        </button>
+      </form>
+    </section>
+
+    <section class="card list-card">
+      <div class="card-header">
+        <div>
+          <p class="eyebrow">Inventario</p>
+          <h2>Productos registrados</h2>
+        </div>
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="loadProducts()"
+          [disabled]="loading()"
+        >
+          Actualizar
+        </button>
+      </div>
+
+      @if (loading()) {
+        <p class="empty-state">Cargando productos...</p>
+      } @else if (products().length === 0) {
+        <p class="empty-state">
+          Todavía no hay productos registrados.
+        </p>
+      } @else {
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Tipo</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (product of products(); track product.id) {
+                <tr>
+                  <td>
+                    <strong>{{ product.name }}</strong>
+                    <span>{{ product.description }}</span>
+                  </td>
+                  <td>{{ productTypeLabel(product.productType) }}</td>
+                  <td>{{ product.price | currency:'USD' }}</td>
+                  <td>{{ product.stock }}</td>
+                  <td class="actions">
+                    <button
+                      type="button"
+                      class="edit-button"
+                      (click)="editProduct(product)"
+                    >
+                      Editar
+                    </button>
+
+                    @if (authService.isAdmin()) {
+                      <button
+                        type="button"
+                        class="delete-button"
+                        (click)="deleteProduct(product)"
+                      >
+                        Eliminar
+                      </button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  </div>
 </section>
