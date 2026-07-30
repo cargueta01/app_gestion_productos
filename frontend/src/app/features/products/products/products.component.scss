@@ -1,0 +1,20 @@
+.products-page {
+  min-height: 100vh;
+  padding: 32px;
+  background: #f8fafc;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+button {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: #dc2626;
+  color: white;
+  cursor: pointer;
+}

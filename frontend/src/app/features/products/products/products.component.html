@@ -1,0 +1,16 @@
+<section class="products-page">
+  <header>
+    <div>
+      <h1>Productos</h1>
+      <p>Usuario: {{ authService.getUser()?.email }}</p>
+    </div>
+
+    <button type="button" (click)="logout()">
+      Cerrar sesión
+    </button>
+  </header>
+
+  <main>
+    <h2>CRUD de productos</h2>
+  </main>
+</section>
