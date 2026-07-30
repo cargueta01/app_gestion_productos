@@ -1,4 +1,9 @@
 package com.serfina.backend.model;
 
-public class ProductType {
+public enum ProductType {
+    ELECTRONICS,
+    CLOTHING,
+    FOOD,
+    HOME,
+    OTHER
 }

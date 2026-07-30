@@ -1,1 +1,29 @@
-spring.application.name=backend
+spring:
+  application:
+    name: serfina-backend
+
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=serfina_db;encrypt=false;trustServerCertificate=true
+    username: sa
+    password: SqlServer#2026
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080
+
+security:
+  jwt:
+    secret: serfina-dev-secret-key-for-test-2026
+    expiration-ms: 86400000
+
+cors:
+  allowed-origins: http://localhost:4200
