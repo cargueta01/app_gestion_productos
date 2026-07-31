@@ -3,27 +3,27 @@ spring:
     name: serfina-backend
 
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=serfina_db;encrypt=false;trustServerCertificate=true
-    username: sa
-    password: SqlServer#2026
+    url: ${DB_URL:jdbc:sqlserver://localhost:1433;databaseName=serfina_db;encrypt=false;trustServerCertificate=true}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:SqlServer#2026}
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    show-sql: ${JPA_SHOW_SQL:false}
     open-in-view: false
     properties:
       hibernate:
         format_sql: true
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
 
 security:
   jwt:
-    secret: serfina-dev-secret-key-for-test-2026
-    expiration-ms: 86400000
+    secret: ${JWT_SECRET:serfina-dev-secret-key-for-test-2026}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}
 
 cors:
-  allowed-origins: http://localhost:4200
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
