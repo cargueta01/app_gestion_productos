@@ -1,72 +1,153 @@
-# Aplicación de gestión de productos
+APLICACION DE GESTION DE PRODUCTOS
 
-Aplicación full stack para la prueba técnica Serfina:
+Aplicación web para administrar productos.
 
-- Backend: Spring Boot, Java 21, Spring Security, JWT y SQL Server.
-- Frontend: Angular 21.
-- Base de datos: SQL Server 2022.
-- Contenedores: Docker Compose.
+Tecnologías utilizadas:
 
-## Ejecutar con Docker
+Backend: Spring Boot y Java 21.
+Frontend: Angular 21.
+Base de datos: SQL Server 2022.
+Seguridad: Spring Security, JWT y BCrypt.
+Contenedores: Docker Compose.
 
-Requisitos:
+REQUISITOS
 
-- Docker Desktop con integración WSL2.
-- Docker Compose.
+Tener instalado Docker Desktop.
+Tener habilitada la integración de Docker con WSL2.
+Tener Git instalado.
 
-Desde la raíz del proyecto:
+EJECUTAR TODA LA APLICACION CON DOCKER
 
-```bash
+Abrir una terminal de Ubuntu WSL2.
+
+Ir a la carpeta del proyecto:
+
+cd /home/carlos/Projects/prueba-tecnica-serfina
+
+Construir y levantar los contenedores:
+
 docker compose up --build
-```
 
-URLs:
+La primera ejecución puede tardar porque Docker descargará las imágenes y dependencias.
 
-- Frontend: http://localhost:4200
-- Backend: http://localhost:8080
-- Health: http://localhost:8080/actuator/health
-- SQL Server: localhost:1433
-
-Usuarios demo:
-
-```text
-admin@serfina.com / Admin123!
-user@serfina.com / User123!
-```
-
-El usuario `USER` puede consultar, crear y actualizar productos. El usuario `ADMIN` también puede eliminarlos.
-
-## Ejecutar en desarrollo
-
-SQL Server:
-
-```bash
-docker compose up -d sqlserver
-```
-
-Backend:
-
-```bash
-cd backend
-./mvnw spring-boot:run
-```
+Cuando termine, abrir en el navegador:
 
 Frontend:
+http://localhost:4200
 
-```bash
-cd frontend
-export PATH="$HOME/.nvm/versions/node/v24.18.1/bin:$PATH"
-npm start
-```
+Backend:
+http://localhost:8080
 
-## Detener contenedores
+Estado del backend:
+http://localhost:8080/actuator/health
 
-```bash
+USUARIOS DE PRUEBA
+
+Administrador:
+Email: admin@serfina.com
+Contraseña: Admin123!
+
+Usuario normal:
+Email: user@serfina.com
+Contraseña: User123!
+
+PERMISOS
+
+El usuario normal puede listar, crear y actualizar productos.
+El administrador también puede eliminar productos.
+
+DETENER LA APLICACION
+
+Presionar Ctrl+C en la terminal donde se ejecuta Docker Compose.
+
+También se puede ejecutar:
+
 docker compose down
-```
 
-Para eliminar también los datos persistidos de SQL Server:
+DETENER Y ELIMINAR LOS DATOS DE SQL SERVER
 
-```bash
+Este comando elimina también la información almacenada en la base de datos:
+
 docker compose down -v
-```
+
+EJECUTAR LA APLICACION SIN DOCKER
+
+Primero iniciar solamente SQL Server:
+
+docker compose up -d sqlserver
+
+Iniciar el backend desde otra terminal:
+
+cd /home/carlos/Projects/prueba-tecnica-serfina/backend
+./mvnw spring-boot:run
+
+Si ./mvnw no tiene permisos de ejecución, usar:
+
+chmod +x mvnw
+./mvnw spring-boot:run
+
+También se puede utilizar Maven directamente:
+
+mvn spring-boot:run
+
+Iniciar el frontend desde otra terminal:
+
+cd /home/carlos/Projects/prueba-tecnica-serfina/frontend
+export PATH="$HOME/.nvm/versions/node/v24.18.1/bin:$PATH"
+npm install
+npm start
+
+El frontend local estará disponible en:
+
+http://localhost:4200
+
+ESTRUCTURA DEL PROYECTO
+
+backend contiene la API de Spring Boot.
+frontend contiene la aplicación Angular.
+backend/database/init.sql contiene el script de creación de la base de datos.
+docker-compose.yml contiene la configuración de todos los contenedores.
+
+COMANDOS DE PRUEBA
+
+Ver el estado de los contenedores:
+
+docker compose ps
+
+Ver los logs del backend:
+
+docker compose logs -f backend
+
+Ver los logs del frontend:
+
+docker compose logs -f frontend
+
+Ver los logs de SQL Server:
+
+docker compose logs -f sqlserver
+
+Probar el estado del backend:
+
+curl http://localhost:8080/actuator/health
+
+SUBIR CAMBIOS A GITHUB
+
+Ver los archivos modificados:
+
+git status
+
+Agregar los cambios:
+
+git add .
+
+Crear un commit:
+
+git commit -m "descripcion de los cambios"
+
+Subir los cambios:
+
+git push
+
+Repositorio:
+
+git@github.com:cargueta01/app_gestion_productos.git
